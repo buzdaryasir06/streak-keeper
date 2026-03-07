@@ -1,0 +1,42 @@
+name: 🔥 GitHub Streak Keeper
+
+on:
+  # Runs daily at 00:30 UTC (05:30 PKT) — adjust cron as preferred
+  schedule:
+    - cron: "30 0 * * *"
+
+  # Allow manual trigger from the Actions tab
+  workflow_dispatch:
+
+jobs:
+  keep-streak:
+    name: Keep Streak Alive
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write  # Required to push commits
+
+    steps:
+      - name: 📥 Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          # Use a PAT (Personal Access Token) if the default token has push issues
+          # Otherwise the built-in GITHUB_TOKEN works fine for push
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 1
+
+      - name: 🐍 Set Up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: 🔧 Configure Git Identity
+        run: |
+          git config --global user.email "streak-bot@users.noreply.github.com"
+          git config --global user.name "Streak Bot"
+
+      - name: 🔥 Run Streak Keeper
+        run: python streak.py
+
+      - name: 📊 Show Commit Log (last 5)
+        run: git log --oneline -5

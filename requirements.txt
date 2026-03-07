@@ -1,0 +1,3 @@
+# GitHub Streak Keeper — Dependencies
+# Uses Python standard library only — no external packages required.
+# Python >= 3.9 recommended.
